@@ -1,14 +1,13 @@
 """Members schema"""
 
 import marshmallow as ma
-from marshmallow_sqlalchemy import ModelSchema
 
-from team_manager.extensions.api import Schema
+from team_manager.extensions.api import Schema, ModelSchema
 from .models import Member
 
 
 class MemberSchema(ModelSchema):
-    class Meta:
+    class Meta(ModelSchema.Meta):
         model = Member
 
 
