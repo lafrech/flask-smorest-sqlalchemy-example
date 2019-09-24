@@ -4,7 +4,7 @@ import marshmallow as ma
 from marshmallow_sqlalchemy import field_for
 
 from team_manager.extensions.api import Schema, ModelSchema
-from .models import Member
+from team_manager.models.members import Member
 
 
 class MemberSchema(ModelSchema):

@@ -4,8 +4,8 @@ from flask.views import MethodView
 
 from team_manager.extensions.api import Blueprint, SQLCursorPage
 from team_manager.extensions.database import db
+from team_manager.models import Member
 
-from .models import Member
 from .schemas import MemberSchema, MemberQueryArgsSchema
 
 

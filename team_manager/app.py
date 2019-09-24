@@ -2,7 +2,7 @@
 
 from flask import Flask
 
-from team_manager import extensions, modules
+from team_manager import extensions, views
 from team_manager.default_settings import DefaultConfig
 
 
@@ -15,6 +15,6 @@ def create_app():
     app.config.from_envvar('FLASK_SETTINGS_FILE', silent=True)
 
     api = extensions.create_api(app)
-    modules.register_blueprints(api)
+    views.register_blueprints(api)
 
     return app
