@@ -32,8 +32,9 @@ class Members(MethodView):
     @blp.etag
     @blp.arguments(MemberSchema)
     @blp.response(MemberSchema, code=201)
-    def post(self, item):
+    def post(self, new_item):
         """Add a new member"""
+        item = Member(**new_item)
         db.session.add(item)
         db.session.commit()
         return item
@@ -51,11 +52,11 @@ class MembersById(MethodView):
     @blp.etag
     @blp.arguments(MemberSchema)
     @blp.response(MemberSchema)
-    def put(self, item, item_id):
+    def put(self, new_item, item_id):
         """Update an existing member"""
-        blp.check_etag(
-            db.session.query(Member).get_or_404(item_id), MemberSchema
-        )
+        item = db.session.query(Member).get_or_404(item_id)
+        blp.check_etag(item, MemberSchema)
+        MemberSchema().update(item, new_item)
         db.session.add(item)
         db.session.commit()
         return item

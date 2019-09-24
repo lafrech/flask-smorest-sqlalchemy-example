@@ -37,6 +37,25 @@ class ModelSchema(OrigModelSchema):
     class Meta:
         sqla_session = db.session
 
+    # No-op make_instance
+    def make_instance(self, data, **kwargs):
+        return data
+
+    def update(self, obj, data):
+        """Update object nullifying missing data"""
+        loadable_fields = [
+            k for k, v in self.fields.items() if not v.dump_only
+        ]
+        for name in loadable_fields:
+            setattr(obj, name, data.get(name))
+
+    # FIXME: This does not respect allow_none fields
+    @ma.post_dump
+    def remove_none_values(self, data, **kwargs):
+        return {
+            key: value for key, value in data.items() if value is not None
+        }
+
 
 class SQLCursorPage(Page):
     """SQL cursor pager"""

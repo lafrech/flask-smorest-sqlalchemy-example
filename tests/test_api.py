@@ -52,23 +52,16 @@ assert ret_val == member_1
 
 # PUT
 del member_1['first_name']
-# FIXME: ID must be passed in body
-# https://github.com/marshmallow-code/marshmallow-sqlalchemy/issues/254
-member_1['id'] = member_1_id
-
 ret = requests.put(
     MEMBERS_URL + member_1_id,
     data=json.dumps(member_1),
     headers={'If-Match': member_1_etag}
 )
-del member_1['id']
 assert ret.status_code == 200
 ret_val = ret.json()
 ret_val.pop('id')
 member_1_etag = ret.headers['ETag']
-# FIXME: first_name is not removed
-# https://github.com/marshmallow-code/marshmallow-sqlalchemy/issues/254
-# assert ret_val == member_1
+assert ret_val == member_1
 
 # PUT wrong ID -> 404
 ret = requests.put(
