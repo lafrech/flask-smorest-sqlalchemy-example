@@ -100,6 +100,7 @@ assert ret.json() == []
 # POST
 team_1 = {
     'name': 'Ghostbusters',
+    'members': [member_1_id]
 }
 
 ret = requests.post(TEAMS_URL, data=json.dumps(team_1))
