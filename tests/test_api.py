@@ -51,7 +51,7 @@ assert ret_val == member_1
 
 
 # PUT
-del member_1['first_name']
+member_1['first_name'] = None
 ret = requests.put(
     MEMBERS_URL + member_1_id,
     data=json.dumps(member_1),

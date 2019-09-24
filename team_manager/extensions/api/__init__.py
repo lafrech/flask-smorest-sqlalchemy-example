@@ -49,13 +49,6 @@ class ModelSchema(OrigModelSchema):
         for name in loadable_fields:
             setattr(obj, name, data.get(name))
 
-    # FIXME: This does not respect allow_none fields
-    @ma.post_dump
-    def remove_none_values(self, data, **kwargs):
-        return {
-            key: value for key, value in data.items() if value is not None
-        }
-
 
 class SQLCursorPage(Page):
     """SQL cursor pager"""
