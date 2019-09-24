@@ -1,12 +1,12 @@
 """Modules initialization"""
 
 from . import members
-# from . import teams
+from . import teams
 
 
 MODULES = (
     members,
-    # teams,
+    teams,
 )
 
 

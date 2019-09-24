@@ -10,20 +10,21 @@ DUMMY_ID = str(uuid.uuid4())
 
 BASE_URL = 'http://127.0.0.1:5000/'
 MEMBERS_URL = BASE_URL + 'members/'
+TEAMS_URL = BASE_URL + 'teams/'
 
 # GET list
 ret = requests.get(MEMBERS_URL)
 assert ret.status_code == 200
 assert ret.json() == []
 
+
+# POST
 member_1 = {
     'first_name': 'Egon',
     'last_name': 'Spengler',
     'birthdate': dt.datetime(1958, 10, 2).isoformat()
 }
 
-
-# POST
 ret = requests.post(MEMBERS_URL, data=json.dumps(member_1))
 assert ret.status_code == 201
 ret_val = ret.json()
@@ -89,3 +90,22 @@ assert ret.json() == []
 # GET by id -> 404
 ret = requests.get(MEMBERS_URL + member_1_id)
 assert ret.status_code == 404
+
+# GET list
+ret = requests.get(TEAMS_URL)
+assert ret.status_code == 200
+assert ret.json() == []
+
+
+# POST
+team_1 = {
+    'name': 'Ghostbusters',
+}
+
+ret = requests.post(TEAMS_URL, data=json.dumps(team_1))
+assert ret.status_code == 201
+ret_val = ret.json()
+team_1_id = ret_val.pop('id')
+team_1_etag = ret.headers['ETag']
+assert ret_val == team_1
+team_1 = ret_val
