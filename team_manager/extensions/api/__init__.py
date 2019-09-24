@@ -7,6 +7,8 @@ from marshmallow_sqlalchemy import ModelSchema as OrigModelSchema
 
 from flask_smorest import Api as ApiOrig, Blueprint as BlueprintOrig, Page
 
+from team_manager.extensions.database import db
+
 
 class Blueprint(BlueprintOrig):
     """Blueprint override"""
@@ -32,12 +34,9 @@ class Schema(ma.Schema):
 class ModelSchema(OrigModelSchema):
     """ModelSchema override"""
 
-    # No-op make_instance
-    def make_instance(self, data, **kwargs):
-        return data
-
     class Meta:
-        transient = True
+        sqla_session = db.session
+
 
 class SQLCursorPage(Page):
     """SQL cursor pager"""
