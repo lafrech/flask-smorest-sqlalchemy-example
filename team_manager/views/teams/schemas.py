@@ -16,4 +16,4 @@ class TeamSchema(ModelSchema):
 
 class TeamQueryArgsSchema(Schema):
     name = ma.fields.Str()
-    # TODO: Add member filter
+    member = ma.fields.Str()

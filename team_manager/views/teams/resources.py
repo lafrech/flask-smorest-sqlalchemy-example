@@ -4,7 +4,7 @@ from flask.views import MethodView
 
 from team_manager.extensions.api import Blueprint, SQLCursorPage
 from team_manager.extensions.database import db
-from team_manager.models import Team
+from team_manager.models import Team, Member
 
 from .schemas import TeamSchema, TeamQueryArgsSchema
 
@@ -26,8 +26,11 @@ class Teams(MethodView):
     @blp.paginate(SQLCursorPage)
     def get(self, args):
         """List teams"""
-        # TODO: Add member filters
-        return db.session.query(Team).filter_by(**args)
+        member = args.pop('member', None)
+        ret = db.session.query(Team).filter_by(**args)
+        if member is not None:
+            ret = ret.join(Team.members).filter(Member.id == member)
+        return ret
 
     @blp.etag
     @blp.arguments(TeamSchema)

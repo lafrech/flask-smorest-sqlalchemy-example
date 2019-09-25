@@ -98,9 +98,21 @@ assert ret.json() == []
 
 
 # POST
+member_2 = {
+    'first_name': 'Peter',
+    'last_name': 'Venkman',
+    'birthdate': dt.datetime(1960, 9, 6).isoformat()
+}
+ret = requests.post(MEMBERS_URL, data=json.dumps(member_1))
+assert ret.status_code == 201
+ret_val = ret.json()
+member_2_id = ret_val.pop('id')
+
+
+# POST
 team_1 = {
     'name': 'Ghostbusters',
-    'members': [member_1_id]
+    'members': [member_1_id, member_2_id]
 }
 
 ret = requests.post(TEAMS_URL, data=json.dumps(team_1))
@@ -108,5 +120,20 @@ assert ret.status_code == 201
 ret_val = ret.json()
 team_1_id = ret_val.pop('id')
 team_1_etag = ret.headers['ETag']
-assert ret_val == team_1
-team_1 = ret_val
+assert ret_val['name'] == team_1['name']
+assert set(ret_val['members']) == set(team_1['members'])
+
+
+# POST
+team_2 = {
+    'name': 'A-Team',
+}
+
+
+# GET with filter
+
+ret = requests.get(TEAMS_URL, params={'member': member_1_id})
+assert ret.status_code == 200
+ret_val = ret.json()
+assert len(ret_val) == 1
+assert ret_val[0]['id'] == team_1_id
