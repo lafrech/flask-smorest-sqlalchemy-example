@@ -27,7 +27,7 @@ class Members(MethodView):
     def get(self, args):
         """List members"""
         # TODO: Add birthdate min/max filters
-        return db.session.query(Member).filter_by(**args)
+        return Member.query.filter_by(**args)
 
     @blp.etag
     @blp.arguments(MemberSchema)
@@ -47,14 +47,14 @@ class MembersById(MethodView):
     @blp.response(MemberSchema)
     def get(self, item_id):
         """Get member by ID"""
-        return db.session.query(Member).get_or_404(item_id)
+        return Member.query.get_or_404(item_id)
 
     @blp.etag
     @blp.arguments(MemberSchema)
     @blp.response(MemberSchema)
     def put(self, new_item, item_id):
         """Update an existing member"""
-        item = db.session.query(Member).get_or_404(item_id)
+        item = Member.query.get_or_404(item_id)
         blp.check_etag(item, MemberSchema)
         MemberSchema().update(item, new_item)
         db.session.add(item)
@@ -65,7 +65,7 @@ class MembersById(MethodView):
     @blp.response(code=204)
     def delete(self, item_id):
         """Delete a member"""
-        item = db.session.query(Member).get_or_404(item_id)
+        item = Member.query.get_or_404(item_id)
         blp.check_etag(item, MemberSchema)
         db.session.delete(item)
         db.session.commit()

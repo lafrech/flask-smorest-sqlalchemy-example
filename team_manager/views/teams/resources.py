@@ -27,7 +27,7 @@ class Teams(MethodView):
     def get(self, args):
         """List teams"""
         member = args.pop('member', None)
-        ret = db.session.query(Team).filter_by(**args)
+        ret = Team.query.filter_by(**args)
         if member is not None:
             ret = ret.join(Team.members).filter(Member.id == member)
         return ret
@@ -50,14 +50,14 @@ class TeamsById(MethodView):
     @blp.response(TeamSchema)
     def get(self, item_id):
         """Get team by ID"""
-        return db.session.query(Team).get_or_404(item_id)
+        return Team.query.get_or_404(item_id)
 
     @blp.etag
     @blp.arguments(TeamSchema)
     @blp.response(TeamSchema)
     def put(self, new_item, item_id):
         """Update an existing team"""
-        item = db.session.query(Team).get_or_404(item_id)
+        item = Team.query.get_or_404(item_id)
         blp.check_etag(item, TeamSchema)
         TeamSchema().update(item, new_item)
         db.session.add(item)
@@ -68,7 +68,7 @@ class TeamsById(MethodView):
     @blp.response(code=204)
     def delete(self, item_id):
         """Delete a team"""
-        item = db.session.query(Team).get_or_404(item_id)
+        item = Team.query.get_or_404(item_id)
         blp.check_etag(item, TeamSchema)
         db.session.delete(item)
         db.session.commit()
