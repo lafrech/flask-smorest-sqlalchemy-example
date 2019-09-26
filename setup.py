@@ -39,6 +39,7 @@ setup(
         'sqlalchemy>=1.2.5',
         'sqlalchemy-utils>=0.32.21',
         'flask-sqlalchemy>=2.3.2',
+        # TODO: release max marshmallow_sqlalchemy version when dropping PY3.5
         'marshmallow_sqlalchemy>=0.18,<0.19',
     ],
 )
