@@ -3,11 +3,9 @@
 Override base classes here to allow painless customization in the future.
 """
 import marshmallow as ma
-from marshmallow_sqlalchemy import ModelSchema as OrigModelSchema
+from marshmallow_sqlalchemy import TableSchema as OrigTableSchema
 
 from flask_smorest import Api as ApiOrig, Blueprint as BlueprintOrig, Page
-
-from team_manager.extensions.database import db
 
 
 class Blueprint(BlueprintOrig):
@@ -31,15 +29,11 @@ class Schema(ma.Schema):
     """Schema override"""
 
 
-class ModelSchema(OrigModelSchema):
-    """ModelSchema override"""
+class TableSchema(OrigTableSchema):
+    """TableSchema override"""
 
     class Meta:
-        sqla_session = db.session
-
-    # No-op make_instance
-    def make_instance(self, data, **kwargs):
-        return data
+        include_fk = True
 
     def update(self, obj, data):
         """Update object nullifying missing data"""

@@ -3,15 +3,15 @@
 import marshmallow as ma
 from marshmallow_sqlalchemy import field_for
 
-from team_manager.extensions.api import Schema, ModelSchema
+from team_manager.extensions.api import Schema, TableSchema
 from team_manager.models.members import Member
 
 
-class MemberSchema(ModelSchema):
+class MemberSchema(TableSchema):
     id = field_for(Member, "id", dump_only=True)
 
-    class Meta(ModelSchema.Meta):
-        model = Member
+    class Meta(TableSchema.Meta):
+        table = Member.__table__
 
 
 class MemberQueryArgsSchema(Schema):
