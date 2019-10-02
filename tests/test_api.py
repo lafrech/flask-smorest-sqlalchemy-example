@@ -147,10 +147,17 @@ member_2_id = ret_val.pop('id')
 member_2_etag = ret.headers['ETag']
 
 
-# GET with filter
-
-ret = requests.get(TEAMS_URL, params={'member': member_1_id})
+# GET teams with member_id filter
+ret = requests.get(TEAMS_URL, params={'member_id': member_1_id})
 assert ret.status_code == 200
 ret_val = ret.json()
 assert len(ret_val) == 1
 assert ret_val[0]['id'] == team_1_id
+
+
+# GET members with team_id filter
+ret = requests.get(MEMBERS_URL, params={'team_id': team_1_id})
+assert ret.status_code == 200
+ret_val = ret.json()
+assert len(ret_val) == 2
+assert set(v['id'] for v in ret_val) == {member_1_id, member_2_id}

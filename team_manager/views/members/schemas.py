@@ -17,4 +17,5 @@ class MemberSchema(TableSchema):
 class MemberQueryArgsSchema(Schema):
     first_name = ma.fields.Str()
     last_name = ma.fields.Str()
+    team_id = ma.fields.UUID()
     # TODO: Add birthdate min/max filters

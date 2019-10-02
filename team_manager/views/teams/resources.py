@@ -26,10 +26,10 @@ class Teams(MethodView):
     @blp.paginate(SQLCursorPage)
     def get(self, args):
         """List teams"""
-        member = args.pop('member', None)
+        member_id = args.pop('member_id', None)
         ret = Team.query.filter_by(**args)
-        if member is not None:
-            ret = ret.join(Team.members).filter(Member.id == member)
+        if member_id is not None:
+            ret = ret.join(Team.members).filter(Member.id == member_id)
         return ret
 
     @blp.etag

@@ -16,4 +16,4 @@ class TeamSchema(TableSchema):
 
 class TeamQueryArgsSchema(Schema):
     name = ma.fields.Str()
-    member = ma.fields.UUID()
+    member_id = ma.fields.UUID()
