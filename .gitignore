@@ -123,3 +123,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Notebooks
+# https://stackoverflow.com/a/56717792/
+*.ipynb
