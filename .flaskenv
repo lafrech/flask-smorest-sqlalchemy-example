@@ -1,1 +1,1 @@
-FLASK_APP=team_manager.app
+FLASK_APP=team_manager
