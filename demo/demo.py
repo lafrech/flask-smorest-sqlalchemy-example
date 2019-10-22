@@ -32,6 +32,13 @@ BASE_URL = 'http://127.0.0.1:5000/'
 MEMBERS_URL = BASE_URL + 'members/'
 TEAMS_URL = BASE_URL + 'teams/'
 
+for member in requests.get(MEMBERS_URL).json():
+    etag = requests.get(MEMBERS_URL + member['id']).headers['ETag']
+    requests.delete(MEMBERS_URL + member['id'], headers={'If-Match': etag})
+for team in requests.get(TEAMS_URL).json():
+    etag = requests.get(TEAMS_URL + team['id']).headers['ETag']
+    requests.delete(TEAMS_URL + team['id'], headers={'If-Match': etag})
+
 # ## GET members list
 
 ret = requests.get(MEMBERS_URL)
