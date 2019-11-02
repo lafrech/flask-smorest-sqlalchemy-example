@@ -39,6 +39,8 @@ for team in requests.get(TEAMS_URL).json():
     etag = requests.get(TEAMS_URL + team['id']).headers['ETag']
     requests.delete(TEAMS_URL + team['id'], headers={'If-Match': etag})
 
+# ---------------------------------------------------------------------------
+
 # ## GET members list
 
 ret = requests.get(MEMBERS_URL)
@@ -49,6 +51,8 @@ ret.status_code
 ret.json()
 
 ret.headers['X-Pagination']
+
+ret.headers['ETag']
 
 # ## POST a member
 
@@ -70,8 +74,7 @@ ret.json()
 
 ret.headers['Etag']
 
-member_1_id = ret.json().pop('id')
-member_1_etag = ret.headers['ETag']
+member_1_id = ret.json()['id']
 
 # ## GET members list
 
@@ -81,6 +84,8 @@ ret = requests.get(MEMBERS_URL)
 ret.status_code
 
 ret.json()
+
+ret.headers['X-Pagination']
 
 ret.headers['ETag']
 
@@ -125,6 +130,14 @@ ret.headers['ETag']
 
 member_1_etag = ret.headers['ETag']
 
+# ## PUT member, missing ETag
+
+ret = requests.put(
+    MEMBERS_URL + member_1_id,
+    data=json.dumps(member_1),
+)
+ret.status_code
+
 # ## PUT member, wrong ETag
 
 ret = requests.put(
@@ -132,7 +145,6 @@ ret = requests.put(
     data=json.dumps(member_1),
     headers={'If-Match': DUMMY_ETAG}
 )
-
 ret.status_code
 
 # ## PUT member, wrong ID
@@ -142,9 +154,8 @@ ret = requests.put(
     data=json.dumps(member_1),
     headers={'If-Match': member_1_etag}
 )
-
-
 ret.status_code
+
 
 # ## DELETE member
 
@@ -152,33 +163,27 @@ ret = requests.delete(
     MEMBERS_URL + member_1_id,
     headers={'If-Match': member_1_etag}
 )
-
-
 ret.status_code
+
 
 # # GET members list
 
 ret = requests.get(MEMBERS_URL)
-
-
-ret.status_code
-
 ret.json()
+
 
 # ## GET member by id -> 404
 
 ret = requests.get(MEMBERS_URL + member_1_id)
-
 ret.status_code
+
+# ---------------------------------------------------------------------------
 
 # ## GET teams list
 
 ret = requests.get(TEAMS_URL)
-
-
-ret.status_code
-
 ret.json()
+
 
 # ## POST teams
 
@@ -190,7 +195,6 @@ ret = requests.post(
     data=json.dumps(team_1)
 )
 team_1_id = ret.json().pop('id')
-team_1_etag = ret.headers['ETag']
 
 team_2 = {
     'name': 'A-Team',
@@ -200,7 +204,6 @@ ret = requests.post(
     data=json.dumps(team_2)
 )
 team_2_id = ret.json().pop('id')
-team_2_etag = ret.headers['ETag']
 
 
 # ## POST members with teams
@@ -216,7 +219,6 @@ ret = requests.post(
     data=json.dumps(member_1)
 )
 member_1_id = ret.json().pop('id')
-member_1_etag = ret.headers['ETag']
 
 member_2 = {
     'first_name': 'Peter',
@@ -229,7 +231,6 @@ ret = requests.post(
     data=json.dumps(member_1)
 )
 member_2_id = ret.json().pop('id')
-member_2_etag = ret.headers['ETag']
 
 # ## GET members with team filter
 
@@ -237,18 +238,12 @@ ret = requests.get(
     MEMBERS_URL,
     params={'team_id': team_1_id}
 )
-
-ret.status_code
-
 ret.json()
 
 ret = requests.get(
     MEMBERS_URL,
     params={'team_id': team_2_id}
 )
-
-ret.status_code
-
 ret.json()
 
 # ## GET teams with member filter
